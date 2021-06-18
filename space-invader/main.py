@@ -1,8 +1,9 @@
 import pygame
+import random
 pygame.init()
 
 # Creating the window
-screen = pygame.display.set_mode((800,600))
+screen = pygame.display.set_mode((800,620))
 
 # Styling the window
 pygame.display.set_caption('Space Invader')
@@ -15,6 +16,13 @@ player_x,player_y = 370,600
 player_x_change = 0
 def player(x,y):
     screen.blit(player_ship,(x,y))
+
+# Enemy
+enemy_img = pygame.image.load('space-invader\\enemy.png')
+enemy_x,enemy_y = random.randint(0,800),random.randint(10,200)
+enemy_x_change,enemy_y_change = 0.3,40
+def enemy(x,y):
+    screen.blit(enemy_img,(x,y))
 
 # Intro
 def intro(x,y):
@@ -30,15 +38,20 @@ def intro(x,y):
     return y
 def game_banner(x,y):
     intro_img = pygame.image.load('space-invader\\intro.png')
-    text_img = pygame.image.load('space-invader\\text.png')
+    text_img = pygame.image.load('space-invader\\intro-text.png')
     screen.blit(intro_img,(x,y))
-    screen.blit(text_img,(x-100,y+150))
+    screen.blit(text_img,(x+65,y+170))
     pygame.display.update()
     show = True
     while show:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                show = False
+                if event.key == pygame.K_p:
+                    show = False
+                elif event.key == pygame.K_c:
+                    controls_img = pygame.image.load('space-invader\\controls.png')
+                    screen.blit(controls_img,(x-2,y-40))
+                    pygame.display.update()
     return
 def intro2(x,y):
     screen.fill((41,44,75))
@@ -85,6 +98,16 @@ while running:
     elif player_x >= 736:
         player_x = 736
 
+    # For enemy movement
+    if enemy_x <= 0:
+        enemy_x_change = 0.3
+        enemy_y += enemy_y_change
+    elif enemy_x >= 736:
+        enemy_x_change = -0.3
+        enemy_y += enemy_y_change
+    enemy_x += enemy_x_change
+
     player(player_x,player_y)
+    enemy(enemy_x,enemy_y)
     
     pygame.display.update()
