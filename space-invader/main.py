@@ -1,4 +1,5 @@
 import pygame
+import random
 pygame.init()
 
 # Creating the window
@@ -15,6 +16,13 @@ player_x,player_y = 370,600
 player_x_change = 0
 def player(x,y):
     screen.blit(player_ship,(x,y))
+
+# Enemy
+enemy_img = pygame.image.load('space-invader\\enemy.png')
+enemy_x,enemy_y = random.randint(0,800),random.randint(10,300)
+enemy_x_change = 0
+def enemy(x,y):
+    screen.blit(enemy_img,(x,y))
 
 # Intro
 def intro(x,y):
@@ -91,5 +99,6 @@ while running:
         player_x = 736
 
     player(player_x,player_y)
+    enemy(enemy_x,enemy_y)
     
     pygame.display.update()
