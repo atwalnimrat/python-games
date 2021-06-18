@@ -2,7 +2,7 @@ import pygame
 pygame.init()
 
 # Creating the window
-screen = pygame.display.set_mode((800,600))
+screen = pygame.display.set_mode((800,620))
 
 # Styling the window
 pygame.display.set_caption('Space Invader')
@@ -30,15 +30,20 @@ def intro(x,y):
     return y
 def game_banner(x,y):
     intro_img = pygame.image.load('space-invader\\intro.png')
-    text_img = pygame.image.load('space-invader\\text.png')
+    text_img = pygame.image.load('space-invader\\intro-text.png')
     screen.blit(intro_img,(x,y))
-    screen.blit(text_img,(x-100,y+150))
+    screen.blit(text_img,(x+65,y+170))
     pygame.display.update()
     show = True
     while show:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                show = False
+                if event.key == pygame.K_p:
+                    show = False
+                elif event.key == pygame.K_c:
+                    controls_img = pygame.image.load('space-invader\\controls.png')
+                    screen.blit(controls_img,(x-2,y-40))
+                    pygame.display.update()
     return
 def intro2(x,y):
     screen.fill((41,44,75))
