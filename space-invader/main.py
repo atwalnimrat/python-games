@@ -19,8 +19,8 @@ def player(x,y):
 
 # Enemy
 enemy_img = pygame.image.load('space-invader\\enemy.png')
-enemy_x,enemy_y = random.randint(0,800),random.randint(10,300)
-enemy_x_change = 0
+enemy_x,enemy_y = random.randint(0,800),random.randint(10,200)
+enemy_x_change,enemy_y_change = 0.3,40
 def enemy(x,y):
     screen.blit(enemy_img,(x,y))
 
@@ -97,6 +97,15 @@ while running:
         player_x = 0
     elif player_x >= 736:
         player_x = 736
+
+    # For enemy movement
+    if enemy_x <= 0:
+        enemy_x_change = 0.3
+        enemy_y += enemy_y_change
+    elif enemy_x >= 736:
+        enemy_x_change = -0.3
+        enemy_y += enemy_y_change
+    enemy_x += enemy_x_change
 
     player(player_x,player_y)
     enemy(enemy_x,enemy_y)
