@@ -24,6 +24,16 @@ enemy_x_change,enemy_y_change = 0.2,40
 def enemy(x,y):
     screen.blit(enemy_img,(x,y))
 
+# Bullet
+bullet_img = pygame.image.load('space-invader\\bullet.png')
+bullet_x,bullet_y = player_x,520
+bullet_y_change = -0.5
+bullet_state = 'ready'
+def fire_bullet(x,y):
+    global bullet_state
+    bullet_state = 'fire'
+    screen.blit(bullet_img,(x+16,y+10))
+
 # Intro
 def intro(x,y):
     screen.fill((41,44,75))
@@ -105,12 +115,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # For moving the player ship
+    # For moving the player ship & firing bullets
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 player_x_change = -0.3
             if event.key == pygame.K_RIGHT:
                 player_x_change = 0.3
+            if event.key == pygame.K_SPACE:
+                fire_bullet(bullet_x,bullet_y)
         if event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT,pygame.K_RIGHT):
                 player_x_change = 0
@@ -121,6 +133,10 @@ while running:
         player_x = 0
     elif player_x >= 736:
         player_x = 736
+
+    if bullet_state == 'fire':
+        bullet_y += bullet_y_change
+        fire_bullet(bullet_x,bullet_y)
 
     # For enemy movement
     if enemy_x <= 0:
