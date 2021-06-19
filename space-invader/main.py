@@ -20,7 +20,7 @@ def player(x,y):
 # Enemy
 enemy_img = pygame.image.load('space-invader\\enemy.png')
 enemy_x,enemy_y = random.randint(0,800),random.randint(10,200)
-enemy_x_change,enemy_y_change = 0.3,40
+enemy_x_change,enemy_y_change = 0.2,40
 def enemy(x,y):
     screen.blit(enemy_img,(x,y))
 
@@ -47,6 +47,17 @@ def game_banner(x,y):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
+                    mode_img = pygame.image.load('space-invader\\mode.png')
+                    screen.blit(mode_img,(x,y-30))
+                    pygame.display.update()
+                elif event.key == pygame.K_e:
+                    mode = 'easy'
+                    show = False
+                elif event.key == pygame.K_m:
+                    mode = 'medium'
+                    show = False
+                elif event.key == pygame.K_h:
+                    mode = 'hard'
                     show = False
                 elif event.key == pygame.K_c:
                     controls_img = pygame.image.load('space-invader\\controls.png')
@@ -64,9 +75,22 @@ def intro2(x,y):
             intro_run = False
         pygame.display.update()
     return y
+
+mode = ''
 player_y = intro(player_x,player_y)
 game_banner(190,220)
 player_y = intro2(player_x,player_y)
+
+# Modes
+if mode == 'easy':
+    enemy_x_change = 0.2
+elif mode == 'medium':
+    #enemy_no % 2 != 0  ---> enemy_x_change = 0.2
+    #enemy_no % 2 == 0  ---> enemy_x_change = -0.2
+    enemy_x_change = 0.2
+elif mode == 'hard':
+    # random movement for each enemy
+    enemy_x_change = 0.2
 
 # Game loop
 running = True
@@ -100,10 +124,10 @@ while running:
 
     # For enemy movement
     if enemy_x <= 0:
-        enemy_x_change = 0.3
+        enemy_x_change = 0.2
         enemy_y += enemy_y_change
     elif enemy_x >= 736:
-        enemy_x_change = -0.3
+        enemy_x_change = -0.2
         enemy_y += enemy_y_change
     enemy_x += enemy_x_change
 
