@@ -19,20 +19,28 @@ def player(x,y):
 
 # Enemy
 enemy_img = pygame.image.load('space-invader\\enemy.png')
-enemy_x,enemy_y = random.randint(0,800),random.randint(10,200)
+enemy_x,enemy_y = random.randint(0,735),random.randint(10,200)
 enemy_x_change,enemy_y_change = 0.2,40
 def enemy(x,y):
     screen.blit(enemy_img,(x,y))
 
 # Bullet
 bullet_img = pygame.image.load('space-invader\\bullet.png')
-bullet_y = 520
+bullet_x,bullet_y = player_x,520
 bullet_y_change = -0.5
 bullet_state = 'ready'
 def fire_bullet(x,y):
     global bullet_state
     bullet_state = 'fire'
     screen.blit(bullet_img,(x+16,y+10))
+
+#Collision
+def iscollision(enemy_x,enemy_y,bullet_x,bullet_y):
+    distance = ((enemy_x-bullet_x)**2 + (enemy_y-bullet_y)**2)**0.5
+    if distance < 27:
+        return True
+    else:
+        return False
 
 # Intro
 def intro(x,y):
@@ -90,6 +98,8 @@ mode = ''
 player_y = intro(player_x,player_y)
 game_banner(190,220)
 player_y = intro2(player_x,player_y)
+
+score = 0
 
 # Modes
 if mode == 'easy':
@@ -152,6 +162,14 @@ while running:
         enemy_x_change = -0.2
         enemy_y += enemy_y_change
     enemy_x += enemy_x_change
+
+    # Collision detection
+    collision = iscollision(enemy_x,enemy_y,bullet_x,bullet_y)
+    if collision:
+        bullet_y = 520
+        bullet_state = 'ready'
+        score += 1
+        enemy_x,enemy_y = random.randint(0,735),random.randint(10,200)
 
     player(player_x,player_y)
     enemy(enemy_x,enemy_y)
