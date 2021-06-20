@@ -26,7 +26,7 @@ def enemy(x,y):
 
 # Bullet
 bullet_img = pygame.image.load('space-invader\\bullet.png')
-bullet_x,bullet_y = player_x,520
+bullet_y = 520
 bullet_y_change = -0.5
 bullet_state = 'ready'
 def fire_bullet(x,y):
@@ -122,7 +122,9 @@ while running:
             if event.key == pygame.K_RIGHT:
                 player_x_change = 0.3
             if event.key == pygame.K_SPACE:
-                fire_bullet(bullet_x,bullet_y)
+                if bullet_state is 'ready':
+                    bullet_x = player_x
+                    fire_bullet(bullet_x,bullet_y)
         if event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT,pygame.K_RIGHT):
                 player_x_change = 0
@@ -133,7 +135,11 @@ while running:
         player_x = 0
     elif player_x >= 736:
         player_x = 736
-
+    
+    # For firing multiple bullets
+    if bullet_y <= 0:
+        bullet_y = 520
+        bullet_state = 'ready'
     if bullet_state == 'fire':
         bullet_y += bullet_y_change
         fire_bullet(bullet_x,bullet_y)
