@@ -105,8 +105,8 @@ score = 0
 if mode == 'easy':
     enemy_x_change = 0.2
 elif mode == 'medium':
-    #enemy_no % 2 != 0  ---> enemy_x_change = 0.2
-    #enemy_no % 2 == 0  ---> enemy_x_change = -0.2
+    #enemy_no % 2 != 0  --> enemy_x_change = 0.2
+    #enemy_no % 2 == 0  --> enemy_x_change = -0.2
     enemy_x_change = 0.2
 elif mode == 'hard':
     # random movement for each enemy
