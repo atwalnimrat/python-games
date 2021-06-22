@@ -19,8 +19,14 @@ def player(x,y):
 
 # Enemy
 enemy_img = pygame.image.load('space-invader\\enemy.png')
-enemy_x,enemy_y = random.randint(0,735),random.randint(10,200)
-enemy_x_change,enemy_y_change = 0.2,40
+enemy_x,enemy_y = [],[]
+enemy_x_change,enemy_y_change = [],[]
+num_of_enemies = 6
+for i in range(num_of_enemies):
+    enemy_x.append(random.randint(0,735))
+    enemy_y.append(random.randint(10,200))
+    enemy_x_change.append(0.2)
+    enemy_y_change.append(45)
 def enemy(x,y):
     screen.blit(enemy_img,(x,y))
 
@@ -155,23 +161,25 @@ while running:
         fire_bullet(bullet_x,bullet_y)
 
     # For enemy movement
-    if enemy_x <= 0:
-        enemy_x_change = 0.2
-        enemy_y += enemy_y_change
-    elif enemy_x >= 736:
-        enemy_x_change = -0.2
-        enemy_y += enemy_y_change
-    enemy_x += enemy_x_change
-
-    # Collision detection
-    collision = iscollision(enemy_x,enemy_y,bullet_x,bullet_y)
-    if collision:
-        bullet_y = 520
-        bullet_state = 'ready'
-        score += 1
-        enemy_x,enemy_y = random.randint(0,735),random.randint(10,200)
+    for j in range(num_of_enemies):
+        if enemy_x[j] <= 0:
+            enemy_x_change[j] = 0.2
+            enemy_y[j] += enemy_y_change[j]
+        elif enemy_x[j] >= 736:
+            enemy_x_change[j] = -0.2
+            enemy_y[j] += enemy_y_change[j]
+        enemy_x[j] += enemy_x_change[j]
+        enemy(enemy_x[j],enemy_y[j])
+        # Collision detection
+        collision = iscollision(enemy_x[j],enemy_y[j],bullet_x,bullet_y)
+        if collision:
+            bullet_y = 520
+            bullet_state = 'ready'
+            score += 1
+            print(score)
+            enemy_x[j],enemy_y[j] = random.randint(0,735),random.randint(10,200)
 
     player(player_x,player_y)
-    enemy(enemy_x,enemy_y)
+    
     
     pygame.display.update()
