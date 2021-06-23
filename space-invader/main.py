@@ -7,7 +7,7 @@ pygame.init()
 screen = pygame.display.set_mode((800,620))
 
 # Styling the window
-pygame.display.set_caption('Space Invader')
+pygame.display.set_caption('Space Invaders')
 icon = pygame.image.load('space-invader\\ship.png')
 pygame.display.set_icon(icon)
 
@@ -154,7 +154,7 @@ while running:
             if event.key == pygame.K_RIGHT:
                 player_x_change = 0.5
             if event.key == pygame.K_SPACE:
-                if bullet_state is 'ready':
+                if bullet_state == 'ready':
                     bullet_sound = mixer.Sound('space-invader\\bullet.wav')
                     bullet_sound.play()
                     bullet_x = player_x
