@@ -1,4 +1,5 @@
 import pygame
+from pygame import mixer
 import random
 pygame.init()
 
@@ -59,6 +60,7 @@ def game_banner(x,y):
     text_img = pygame.image.load('space-invader\\intro-text.png')
     screen.blit(intro_img,(x,y))
     screen.blit(text_img,(x+65,y+170))
+    mixer.music.play()
     pygame.display.update()
     show = True
     while show:
@@ -91,6 +93,7 @@ def intro2(x,y):
         pygame.display.update()
     return y
 
+mixer.music.load('space-invader\\background.wav')
 player_y = intro(player_x,player_y)
 mode = game_banner(190,220)
 player_y = intro2(player_x,player_y)
@@ -138,6 +141,8 @@ while running:
                 player_x_change = 0.5
             if event.key == pygame.K_SPACE:
                 if bullet_state is 'ready':
+                    bullet_sound = mixer.Sound('space-invader\\bullet.wav')
+                    bullet_sound.play()
                     bullet_x = player_x
                     fire_bullet(bullet_x,bullet_y)
         if event.type == pygame.KEYUP:
@@ -172,6 +177,8 @@ while running:
         # Collision detection
         collision = iscollision(enemy_x[j],enemy_y[j],bullet_x,bullet_y)
         if collision:
+            explosion_sound = mixer.Sound('space-invader\\explosion.wav')
+            explosion_sound.play()
             bullet_y = 520
             bullet_state = 'ready'
             score_value += 1
