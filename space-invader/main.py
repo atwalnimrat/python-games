@@ -120,6 +120,15 @@ def show_score(x,y):
     score = font.render('Score: '+str(score_value),True,(255,255,255))
     screen.blit(score,(x,y))
 
+# Game Over
+go_font = pygame.font.Font('freesansbold.ttf',64)
+pa_font = pygame.font.Font('freesansbold.ttf',28)
+def game_over_text():
+    go = go_font.render('GAME OVER',True,(77,208,225))
+    pa = pa_font.render('Press p to play again',True,(255,255,255))
+    screen.blit(go,(200,250))
+    screen.blit(pa,(255,320))
+
 # Game loop
 running = True
 while running:
@@ -135,6 +144,11 @@ while running:
 
     # For moving the player ship & firing bullets
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                for l in range(num_of_enemies):
+                    enemy_y[l] = random.randint(10,200)
+                score_value = 0
+                pygame.display.update()
             if event.key == pygame.K_LEFT:
                 player_x_change = -0.5
             if event.key == pygame.K_RIGHT:
@@ -166,6 +180,11 @@ while running:
 
     # For enemy movement
     for j in range(num_of_enemies):
+        if enemy_y[j] > 460:
+            for k in range(num_of_enemies):
+                enemy_y[k] = 2000
+            game_over_text()
+
         if enemy_x[j] <= 0:
             enemy_x_change[j] = change
             enemy_y[j] += enemy_y_change[j]
