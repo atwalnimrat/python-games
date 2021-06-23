@@ -21,12 +21,6 @@ def player(x,y):
 enemy_img = pygame.image.load('space-invader\\enemy.png')
 enemy_x,enemy_y = [],[]
 enemy_x_change,enemy_y_change = [],[]
-num_of_enemies = 6
-for i in range(num_of_enemies):
-    enemy_x.append(random.randint(0,735))
-    enemy_y.append(random.randint(10,200))
-    enemy_x_change.append(0.2)
-    enemy_y_change.append(45)
 def enemy(x,y):
     screen.blit(enemy_img,(x,y))
 
@@ -72,13 +66,10 @@ def game_banner(x,y):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     mode_img = pygame.image.load('space-invader\\mode.png')
-                    screen.blit(mode_img,(x,y-30))
+                    screen.blit(mode_img,(x,y-50))
                     pygame.display.update()
                 elif event.key == pygame.K_e:
                     mode = 'easy'
-                    show = False
-                elif event.key == pygame.K_m:
-                    mode = 'medium'
                     show = False
                 elif event.key == pygame.K_h:
                     mode = 'hard'
@@ -87,7 +78,7 @@ def game_banner(x,y):
                     controls_img = pygame.image.load('space-invader\\controls.png')
                     screen.blit(controls_img,(x-2,y-40))
                     pygame.display.update()
-    return
+    return mode
 def intro2(x,y):
     screen.fill((41,44,75))
     intro_run = True
@@ -100,10 +91,23 @@ def intro2(x,y):
         pygame.display.update()
     return y
 
-mode = ''
 player_y = intro(player_x,player_y)
-game_banner(190,220)
+mode = game_banner(190,220)
 player_y = intro2(player_x,player_y)
+
+# Modes
+if mode == 'easy':
+    num_of_enemies = 5
+    change = 0.4
+elif mode == 'hard':
+    num_of_enemies = 10
+    change = 0.6
+
+for i in range(num_of_enemies):
+    enemy_x.append(random.randint(0,735))
+    enemy_y.append(random.randint(10,200))
+    enemy_x_change.append(change)
+    enemy_y_change.append(45)
 
 # Score
 score_value = 0
@@ -112,17 +116,6 @@ text_x,text_y = 620,20
 def show_score(x,y):
     score = font.render('Score: '+str(score_value),True,(255,255,255))
     screen.blit(score,(x,y))
-
-# Modes
-if mode == 'easy':
-    enemy_x_change = 0.2
-elif mode == 'medium':
-    #enemy_no % 2 != 0  --> enemy_x_change = 0.2
-    #enemy_no % 2 == 0  --> enemy_x_change = -0.2
-    enemy_x_change = 0.2
-elif mode == 'hard':
-    # random movement for each enemy
-    enemy_x_change = 0.2
 
 # Game loop
 running = True
@@ -140,9 +133,9 @@ while running:
     # For moving the player ship & firing bullets
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                player_x_change = -0.3
+                player_x_change = -0.5
             if event.key == pygame.K_RIGHT:
-                player_x_change = 0.3
+                player_x_change = 0.5
             if event.key == pygame.K_SPACE:
                 if bullet_state is 'ready':
                     bullet_x = player_x
@@ -169,10 +162,10 @@ while running:
     # For enemy movement
     for j in range(num_of_enemies):
         if enemy_x[j] <= 0:
-            enemy_x_change[j] = 0.2
+            enemy_x_change[j] = change
             enemy_y[j] += enemy_y_change[j]
         elif enemy_x[j] >= 736:
-            enemy_x_change[j] = -0.2
+            enemy_x_change[j] = -change
             enemy_y[j] += enemy_y_change[j]
         enemy_x[j] += enemy_x_change[j]
         enemy(enemy_x[j],enemy_y[j])
