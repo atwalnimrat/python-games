@@ -193,6 +193,7 @@ while running:
             enemy_y[j] += enemy_y_change[j]
         enemy_x[j] += enemy_x_change[j]
         enemy(enemy_x[j],enemy_y[j])
+
         # Collision detection
         collision = iscollision(enemy_x[j],enemy_y[j],bullet_x,bullet_y)
         if collision:
@@ -203,8 +204,9 @@ while running:
             score_value += 1
             enemy_x[j],enemy_y[j] = random.randint(0,735),random.randint(10,200)
 
-    player(player_x,player_y)
-    
+    player(player_x,player_y)    
     show_score(text_x,text_y)
     
     pygame.display.update()
+
+pygame.quit()
