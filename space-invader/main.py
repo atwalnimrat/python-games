@@ -65,6 +65,9 @@ def game_banner(x,y):
     show = True
     while show:
         for event in pygame.event.get():
+             # For closing the window
+            if event.type == pygame.QUIT:
+                pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     mode_img = pygame.image.load('space-invader\\mode.png')
