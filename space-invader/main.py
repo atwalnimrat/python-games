@@ -53,6 +53,10 @@ def intro(x,y):
             player(x,y)
         else:
             intro_run = False
+        for event in pygame.event.get():    
+            # For closing the window
+            if event.type == pygame.QUIT:
+                pygame.quit()
         pygame.display.update()
     return y
 def game_banner(x,y):
@@ -68,7 +72,7 @@ def game_banner(x,y):
              # For closing the window
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
                     mode_img = pygame.image.load('space-invader\\mode.png')
                     screen.blit(mode_img,(x,y-50))
@@ -93,6 +97,10 @@ def intro2(x,y):
             player(x,y)
         else:
             intro_run = False
+        for event in pygame.event.get():    
+            # For closing the window
+            if event.type == pygame.QUIT:
+                pygame.quit()
         pygame.display.update()
     return y
 
@@ -146,23 +154,23 @@ while running:
             running = False
 
     # For moving the player ship & firing bullets
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 for l in range(num_of_enemies):
                     enemy_y[l] = random.randint(10,200)
                 score_value = 0
                 pygame.display.update()
-            if event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT:
                 player_x_change = -0.5
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 player_x_change = 0.5
-            if event.key == pygame.K_SPACE:
+            elif event.key == pygame.K_SPACE:
                 if bullet_state == 'ready':
                     bullet_sound = mixer.Sound('space-invader\\bullet.wav')
                     bullet_sound.play()
                     bullet_x = player_x
                     fire_bullet(bullet_x,bullet_y)
-        if event.type == pygame.KEYUP:
+        elif event.type == pygame.KEYUP:
             if event.key in (pygame.K_LEFT,pygame.K_RIGHT):
                 player_x_change = 0
     player_x += player_x_change
