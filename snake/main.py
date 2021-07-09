@@ -60,6 +60,24 @@ def show_score(x,y):
     score_txt = font.render(f'Score: {score}',True,(0,0,0))
     screen.blit(score_txt,(x,y))
 
+# Game Over
+game_over = False
+go_font = pygame.font.Font('freesansbold.ttf',32)
+pa_font = pygame.font.Font('freesansbold.ttf',20)
+def game_over_text():
+    go = go_font.render('GAME OVER',True,(41,44,75))
+    pa = pa_font.render('Press p to play again',True,(0,0,0))
+    screen.blit(go,(125,190))
+    screen.blit(pa,(125,240))
+def check_game_over(game_over):
+    global snake_pos
+    for segment in snake_pos[1:]:
+        if snake_pos[0] == segment:
+            game_over = True
+    if snake_pos[0][0] < 5 or snake_pos[0][0] > 435 or snake_pos[0][1] < 5 or snake_pos[0][1] > 435:
+        game_over = True
+    return game_over
+
 # Game loop
 running = True
 while running:
@@ -87,8 +105,8 @@ while running:
     # For creating food
     if new_food == True:
         new_food = False
-        food[0] = (cell_size * random.randint(0,44)) + cell_size/2
-        food[1] = (cell_size * random.randint(0,43)) + cell_size
+        food[0] = (cell_size * random.randint(1,43)) + cell_size/2
+        food[1] = (cell_size * random.randint(1,43)) + cell_size
     pygame.draw.circle(screen,(255,0,0),(food[0],food[1]),cell_size/2)
 
     # Checking if food eaten & increasing snake length
@@ -106,11 +124,15 @@ while running:
         snake_pos.append(new_piece)
         score += 1
     
-    # For snake movement
-    if update_snake > 149: #499
-        update_snake = 0
-        move_snake()
-        
+    # For snake movement & game over
+    if game_over == False:
+        if update_snake > 149: #499
+            update_snake = 0
+            move_snake()
+            game_over = check_game_over(game_over)
+    else:
+        game_over_text()
+            
     snake()
     show_score(text_x,text_y)
     pygame.display.update()
