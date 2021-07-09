@@ -24,6 +24,33 @@ snake_pos = [[0,225]] #235
 new_piece = [0,0]
 for i in range(1,4):
     snake_pos.append([snake_pos[0][0]-(i*cell_size),snake_pos[0][1]])
+def snake():
+    global snake_pos
+    head = 1
+    for j in snake_pos:
+        pygame.draw.rect(screen,(0,0,0),(j[0],j[1],cell_size,cell_size))
+        if head == 1:
+            pygame.draw.rect(screen,(41,44,75),(j[0]+1,j[1]+1,cell_size-2,cell_size-2))
+            head = 0
+        else:
+            pygame.draw.rect(screen,(50,175,25),(j[0]+1,j[1]+1,cell_size-2,cell_size-2))
+# For snake movement
+def move_snake():
+    global snake_pos
+    snake_pos = snake_pos[-1:] + snake_pos[:-1]
+    if direction == 1:
+        snake_pos[0][0] = snake_pos[1][0]
+        snake_pos[0][1] = snake_pos[1][1] - cell_size
+    if direction == 3:
+        snake_pos[0][0] = snake_pos[1][0]
+        snake_pos[0][1] = snake_pos[1][1] + cell_size
+    if direction == 4:
+        snake_pos[0][0] = snake_pos[1][0] - cell_size
+        snake_pos[0][1] = snake_pos[1][1]
+    if direction == 2:
+        snake_pos[0][0] = snake_pos[1][0] + cell_size
+        snake_pos[0][1] = snake_pos[1][1]
+
 
 # Score
 score = 0
@@ -82,30 +109,9 @@ while running:
     # For snake movement
     if update_snake > 149: #499
         update_snake = 0
-        snake_pos = snake_pos[-1:] + snake_pos[:-1]
-        if direction == 1:
-            snake_pos[0][0] = snake_pos[1][0]
-            snake_pos[0][1] = snake_pos[1][1] - cell_size
-        if direction == 3:
-            snake_pos[0][0] = snake_pos[1][0]
-            snake_pos[0][1] = snake_pos[1][1] + cell_size
-        if direction == 4:
-            snake_pos[0][0] = snake_pos[1][0] - cell_size
-            snake_pos[0][1] = snake_pos[1][1]
-        if direction == 2:
-            snake_pos[0][0] = snake_pos[1][0] + cell_size
-            snake_pos[0][1] = snake_pos[1][1]
-
-    # Snake
-    head = 1
-    for j in snake_pos:
-        pygame.draw.rect(screen,(0,0,0),(j[0],j[1],cell_size,cell_size))
-        if head == 1:
-            pygame.draw.rect(screen,(41,44,75),(j[0]+1,j[1]+1,cell_size-2,cell_size-2))
-            head = 0
-        else:
-            pygame.draw.rect(screen,(50,175,25),(j[0]+1,j[1]+1,cell_size-2,cell_size-2))
-
+        move_snake()
+        
+    snake()
     show_score(text_x,text_y)
     pygame.display.update()
 
