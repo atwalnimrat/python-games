@@ -20,12 +20,11 @@ food = [0,0]
 new_food = True
 
 # Snake
-snake_pos = [[0,225]] #235
+snake_pos = [[0,225]]
 new_piece = [0,0]
 for i in range(1,4):
     snake_pos.append([snake_pos[0][0]-(i*cell_size),snake_pos[0][1]])
 def snake():
-    global snake_pos
     head = 1
     for j in snake_pos:
         pygame.draw.rect(screen,(0,0,0),(j[0],j[1],cell_size,cell_size))
@@ -51,6 +50,69 @@ def move_snake():
         snake_pos[0][0] = snake_pos[1][0] + cell_size
         snake_pos[0][1] = snake_pos[1][1]
 
+# Button class
+class Button():
+    def _init_(self,x,y,image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+    def draw(self):
+        screen.blit(self.image,(self.rect.x,self.rect.y))
+
+# Intro
+def intro():
+    screen.fill((255,200,150))
+    intro_run = True
+    update_snake = 0
+    while intro_run:
+        screen.fill((255,200,150))
+        snake()
+        if snake_pos[0][0] < 235:
+            if update_snake > 299:
+                update_snake = 0
+                move_snake()
+            update_snake += 1
+        else:
+            intro_run = False
+        for event in pygame.event.get():    
+            # For closing the window
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update()
+def game_banner():
+    # Button class
+    class button():
+        def __init__(self,x,y,image):
+            self.image = image
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (x,y)
+        def draw(self):
+            screen.blit(self.image,(self.rect.x,self.rect.y))
+    intro_img = pygame.image.load('snake\\intro.png')
+    button_img = pygame.image.load('snake\\intro-btn.png')
+    play_button = button(170,290,button_img)
+    screen.blit(intro_img,(155,50))
+    play_button.draw()
+    pygame.display.update()
+    show = True
+    clicked = False
+    while show:
+        for event in pygame.event.get():
+             # For closing the window
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            # Button related
+            if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
+                clicked = True
+            elif event.type == pygame.MOUSEBUTTONUP and clicked == True:
+                clicked = False
+                pos = pygame.mouse.get_pos()
+                if play_button.rect.collidepoint(pos):
+                    show = False
+
+intro()
+game_banner()
+snake_pos[0] = [130,225]
 
 # Score
 score = 0
@@ -59,6 +121,24 @@ text_x,text_y = 310,30
 def show_score(x,y):
     score_txt = font.render(f'Score: {score}',True,(0,0,0))
     screen.blit(score_txt,(x,y))
+
+# Game Over
+game_over = False
+go_font = pygame.font.Font('freesansbold.ttf',32)
+pa_font = pygame.font.Font('freesansbold.ttf',20)
+def game_over_text():
+    go = go_font.render('GAME OVER',True,(41,44,75))
+    pa = pa_font.render('Press p to play again',True,(0,0,0))
+    screen.blit(go,(125,190))
+    screen.blit(pa,(125,240))
+def check_game_over(game_over):
+    global snake_pos
+    for segment in snake_pos[1:]:
+        if snake_pos[0] == segment:
+            game_over = True
+    if snake_pos[0][0] < 5 or snake_pos[0][0] > 435 or snake_pos[0][1] < 5 or snake_pos[0][1] > 435:
+        game_over = True
+    return game_over
 
 # Game loop
 running = True
@@ -75,6 +155,11 @@ while running:
 
         # For moving the snake
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                snake_pos[0] = [130,225]
+                snake_pos = snake_pos[:4]
+                score = 0
+                game_over = False
             if event.key == pygame.K_UP and direction != 3:
                 direction = 1
             if event.key == pygame.K_DOWN and direction != 1:
@@ -87,8 +172,8 @@ while running:
     # For creating food
     if new_food == True:
         new_food = False
-        food[0] = (cell_size * random.randint(0,44)) + cell_size/2
-        food[1] = (cell_size * random.randint(0,43)) + cell_size
+        food[0] = (cell_size * random.randint(1,43)) + cell_size/2
+        food[1] = (cell_size * random.randint(1,43)) + cell_size
     pygame.draw.circle(screen,(255,0,0),(food[0],food[1]),cell_size/2)
 
     # Checking if food eaten & increasing snake length
@@ -106,11 +191,15 @@ while running:
         snake_pos.append(new_piece)
         score += 1
     
-    # For snake movement
-    if update_snake > 149: #499
-        update_snake = 0
-        move_snake()
-        
+    # For snake movement & game over
+    if game_over == False:
+        if update_snake > 149:
+            update_snake = 0
+            move_snake()
+            game_over = check_game_over(game_over)
+    else:
+        game_over_text()
+            
     snake()
     show_score(text_x,text_y)
     pygame.display.update()
