@@ -1,5 +1,6 @@
 import random
 import pygame
+from pygame import mixer
 pygame.init()
 
 # Creating the window
@@ -14,6 +15,7 @@ pygame.display.set_icon(icon)
 cell_size = 10
 direction = 2        # 1 is up, 2 is right, 3 is down and 4 is left
 update_snake = 0
+play = True
 
 # Food
 food = [0,0]
@@ -94,6 +96,8 @@ def game_banner():
     screen.blit(intro_img,(155,50))
     play_button.draw()
     pygame.display.update()
+    intro_sound = mixer.Sound('snake\\intro-bgd.wav')
+    intro_sound.play()
     show = True
     clicked = False
     while show:
@@ -159,6 +163,7 @@ while running:
                 snake_pos[0] = [130,225]
                 snake_pos = snake_pos[:4]
                 score = 0
+                play = True
                 game_over = False
             if event.key == pygame.K_UP and direction != 3:
                 direction = 1
@@ -174,6 +179,8 @@ while running:
         new_food = False
         food[0] = (cell_size * random.randint(1,43)) + cell_size/2
         food[1] = (cell_size * random.randint(1,43)) + cell_size
+        food_sound = mixer.Sound('snake\\food.wav')
+        food_sound.play()
     pygame.draw.circle(screen,(255,0,0),(food[0],food[1]),cell_size/2)
 
     # Checking if food eaten & increasing snake length
@@ -198,6 +205,10 @@ while running:
             move_snake()
             game_over = check_game_over(game_over)
     else:
+        if play:
+            go_sound = mixer.Sound('snake\\game-over.wav')
+            go_sound.play()
+            play = False
         game_over_text()
             
     snake()
