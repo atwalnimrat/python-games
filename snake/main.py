@@ -132,7 +132,7 @@ go_font = pygame.font.Font('freesansbold.ttf',32)
 pa_font = pygame.font.Font('freesansbold.ttf',20)
 def game_over_text():
     go = go_font.render('GAME OVER',True,(41,44,75))
-    pa = pa_font.render('Press p to play again',True,(0,0,0))
+    pa = pa_font.render('Press p to play again',True,(41,44,75))
     screen.blit(go,(125,190))
     screen.blit(pa,(125,240))
 def check_game_over(game_over):
@@ -209,23 +209,23 @@ while running:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
-        elif update_snake > 124 and len(snake_pos) < 200:
+        elif update_snake > 124 and len(snake_pos) > 100 and len(snake_pos) < 200:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
-        elif update_snake > 99 and len(snake_pos) < 300:
+        elif update_snake > 99 and len(snake_pos) > 200 and len(snake_pos) < 300:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
-        elif update_snake > 74 and len(snake_pos) < 400:
+        elif update_snake > 74 and len(snake_pos) > 300 and len(snake_pos) < 400:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
-        elif update_snake > 49 and len(snake_pos) < 500:
+        elif update_snake > 49 and len(snake_pos) > 400 and len(snake_pos) < 500:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
-        elif update_snake > 24 and len(snake_pos) < 600:
+        elif update_snake > 24 and len(snake_pos) > 500 and len(snake_pos) < 600:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
