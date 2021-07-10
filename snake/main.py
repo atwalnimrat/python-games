@@ -217,7 +217,6 @@ while running:
             play = False
         game_over_text()
             
-    #snake()
     show_score(text_x,text_y)
     pygame.display.update()
 
