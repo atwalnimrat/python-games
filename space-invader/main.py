@@ -62,9 +62,10 @@ def intro(x,y):
 def game_banner(x,y):
     intro_img = pygame.image.load('space-invader\\intro.png')
     text_img = pygame.image.load('space-invader\\intro-text.png')
+    bgd = mixer.Sound('space-invader\\background.wav')
     screen.blit(intro_img,(x,y))
     screen.blit(text_img,(x+65,y+170))
-    mixer.music.play()
+    bgd.play(-1)
     pygame.display.update()
     show = True
     while show:
@@ -104,10 +105,10 @@ def intro2(x,y):
         pygame.display.update()
     return y
 
-mixer.music.load('space-invader\\background.wav')
 player_y = intro(player_x,player_y)
 mode = game_banner(190,220)
 player_y = intro2(player_x,player_y)
+play = True
 
 # Modes
 if mode == 'easy':
@@ -159,6 +160,7 @@ while running:
                 for l in range(num_of_enemies):
                     enemy_y[l] = random.randint(10,200)
                 score_value = 0
+                play = True
                 pygame.display.update()
             elif event.key == pygame.K_LEFT:
                 player_x_change = -0.5
@@ -194,6 +196,10 @@ while running:
         if enemy_y[j] > 460:
             for k in range(num_of_enemies):
                 enemy_y[k] = 2000
+            if play:
+                go_sound = mixer.Sound('space-invader\\game-over.wav')
+                go_sound.play()
+                play = False
             game_over_text()
 
         if enemy_x[j] <= 0:
