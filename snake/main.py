@@ -132,7 +132,7 @@ go_font = pygame.font.Font('freesansbold.ttf',32)
 pa_font = pygame.font.Font('freesansbold.ttf',20)
 def game_over_text():
     go = go_font.render('GAME OVER',True,(41,44,75))
-    pa = pa_font.render('Press p to play again',True,(0,0,0))
+    pa = pa_font.render('Press p to play again',True,(41,44,75))
     screen.blit(go,(125,190))
     screen.blit(pa,(125,240))
 def check_game_over(game_over):
@@ -177,8 +177,12 @@ while running:
     # For creating food
     if new_food == True:
         new_food = False
-        food[0] = (cell_size * random.randint(1,43)) + cell_size/2
-        food[1] = (cell_size * random.randint(1,43)) + cell_size
+        no = True
+        while no:
+            food[0] = (cell_size * random.randint(1,43)) + cell_size/2
+            food[1] = (cell_size * random.randint(1,43)) + cell_size
+            if food not in snake_pos:
+                no = False
         food_sound = mixer.Sound('snake\\food.wav')
         food_sound.play()
     pygame.draw.circle(screen,(255,0,0),(food[0],food[1]),cell_size/2)
@@ -200,18 +204,39 @@ while running:
     
     # For snake movement & game over
     if game_over == False:
-        if update_snake > 149:
+        snake()
+        if update_snake > 149 and len(snake_pos) < 100:
+            update_snake = 0
+            move_snake()
+            game_over = check_game_over(game_over)
+        elif update_snake > 124 and len(snake_pos) > 100 and len(snake_pos) < 200:
+            update_snake = 0
+            move_snake()
+            game_over = check_game_over(game_over)
+        elif update_snake > 99 and len(snake_pos) > 200 and len(snake_pos) < 300:
+            update_snake = 0
+            move_snake()
+            game_over = check_game_over(game_over)
+        elif update_snake > 74 and len(snake_pos) > 300 and len(snake_pos) < 400:
+            update_snake = 0
+            move_snake()
+            game_over = check_game_over(game_over)
+        elif update_snake > 49 and len(snake_pos) > 400 and len(snake_pos) < 500:
+            update_snake = 0
+            move_snake()
+            game_over = check_game_over(game_over)
+        elif update_snake > 24 and len(snake_pos) > 500 and len(snake_pos) < 600:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
     else:
+        snake()
         if play:
             go_sound = mixer.Sound('snake\\game-over.wav')
             go_sound.play()
             play = False
         game_over_text()
             
-    snake()
     show_score(text_x,text_y)
     pygame.display.update()
 
