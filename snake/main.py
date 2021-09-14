@@ -205,27 +205,7 @@ while running:
     # For snake movement & game over
     if game_over == False:
         snake()
-        if update_snake > 149 and len(snake_pos) < 100:
-            update_snake = 0
-            move_snake()
-            game_over = check_game_over(game_over)
-        elif update_snake > 124 and len(snake_pos) > 100 and len(snake_pos) < 200:
-            update_snake = 0
-            move_snake()
-            game_over = check_game_over(game_over)
-        elif update_snake > 99 and len(snake_pos) > 200 and len(snake_pos) < 300:
-            update_snake = 0
-            move_snake()
-            game_over = check_game_over(game_over)
-        elif update_snake > 74 and len(snake_pos) > 300 and len(snake_pos) < 400:
-            update_snake = 0
-            move_snake()
-            game_over = check_game_over(game_over)
-        elif update_snake > 49 and len(snake_pos) > 400 and len(snake_pos) < 500:
-            update_snake = 0
-            move_snake()
-            game_over = check_game_over(game_over)
-        elif update_snake > 24 and len(snake_pos) > 500 and len(snake_pos) < 600:
+        if update_snake > 149:
             update_snake = 0
             move_snake()
             game_over = check_game_over(game_over)
