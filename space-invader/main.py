@@ -42,13 +42,20 @@ def iscollision(enemy_x,enemy_y,bullet_x,bullet_y):
         return True
     else:
         return False
-
+# Button class
+class button():
+    def __init__(self,x,y,image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+    def draw(self):
+        screen.blit(self.image,(self.rect.x,self.rect.y))
 # Intro
 def intro(x,y):
     screen.fill((41,44,75))
     intro_run = True
     while intro_run:
-        if y > 100:
+        if y > 60:
             y -= 0.2
             player(x,y)
         else:
@@ -61,33 +68,51 @@ def intro(x,y):
     return y
 def game_banner(x,y):
     intro_img = pygame.image.load('space-invader\\intro.png')
-    text_img = pygame.image.load('space-invader\\intro-text.png')
+    play_img = pygame.image.load('space-invader\\play-btn.png')
+    play_btn = button(x+132,y+178,play_img)
+    ctrl_img = pygame.image.load('space-invader\\ctrl-btn.png')
+    ctrl_btn = button(x+90,y+280,ctrl_img)
     bgd = mixer.Sound('space-invader\\background.wav')
     screen.blit(intro_img,(x,y))
-    screen.blit(text_img,(x+65,y+170))
+    play_btn.draw()
+    ctrl_btn.draw()
     bgd.play(-1)
     pygame.display.update()
     show = True
+    clicked = False
     while show:
         for event in pygame.event.get():
              # For closing the window
             if event.type == pygame.QUIT:
                 pygame.quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
+            # Button related
+            if event.type == pygame.MOUSEBUTTONDOWN and clicked == False:
+                clicked = True
+            elif event.type == pygame.MOUSEBUTTONUP and clicked == True:
+                clicked = False
+                pos = pygame.mouse.get_pos()
+                if play_btn.rect.collidepoint(pos):
                     mode_img = pygame.image.load('space-invader\\mode.png')
+                    easy_img = pygame.image.load('space-invader\\easy-btn.png')
+                    easy_btn = button(x+135,y+50,easy_img)
+                    hard_img = pygame.image.load('space-invader\\hard-btn.png')
+                    hard_btn = button(x+135,y+200,hard_img)
                     screen.blit(mode_img,(x,y-50))
+                    easy_btn.draw()
+                    hard_btn.draw()
                     pygame.display.update()
-                elif event.key == pygame.K_e:
+                elif ctrl_btn.rect.collidepoint(pos):
+                    controls_img = pygame.image.load('space-invader\\controls.png')
+                    play_btn = button(x+135,y+300,play_img)
+                    screen.blit(controls_img,(x-2,y-10))
+                    play_btn.draw()
+                    pygame.display.update()
+                elif easy_btn.rect.collidepoint(pos):
                     mode = 'easy'
                     show = False
-                elif event.key == pygame.K_h:
+                elif hard_btn.rect.collidepoint(pos):
                     mode = 'hard'
                     show = False
-                elif event.key == pygame.K_c:
-                    controls_img = pygame.image.load('space-invader\\controls.png')
-                    screen.blit(controls_img,(x-2,y-40))
-                    pygame.display.update()
     return mode
 def intro2(x,y):
     screen.fill((41,44,75))
@@ -106,7 +131,7 @@ def intro2(x,y):
     return y
 
 player_y = intro(player_x,player_y)
-mode = game_banner(190,220)
+mode = game_banner(190,170)
 player_y = intro2(player_x,player_y)
 play = True
 
