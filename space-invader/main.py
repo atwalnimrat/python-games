@@ -18,30 +18,6 @@ player_x_change = 0
 def player(x,y):
     screen.blit(player_ship,(x,y))
 
-# Enemy
-enemy_img = pygame.image.load('space-invader\\enemy.png')
-enemy_x,enemy_y = [],[]
-enemy_x_change,enemy_y_change = [],[]
-def enemy(x,y):
-    screen.blit(enemy_img,(x,y))
-
-# Bullet
-bullet_img = pygame.image.load('space-invader\\bullet.png')
-bullet_x,bullet_y = player_x,520
-bullet_y_change = -0.5
-bullet_state = 'ready'
-def fire_bullet(x,y):
-    global bullet_state
-    bullet_state = 'fire'
-    screen.blit(bullet_img,(x+16,y+10))
-
-#Collision
-def iscollision(enemy_x,enemy_y,bullet_x,bullet_y):
-    distance = ((enemy_x-bullet_x)**2 + (enemy_y-bullet_y)**2)**0.5
-    if distance < 30:
-        return True
-    else:
-        return False
 # Button class
 class button():
     def __init__(self,x,y,image):
@@ -56,7 +32,7 @@ def intro(x,y):
     intro_run = True
     while intro_run:
         if y > 60:
-            y -= 0.2
+            y -= 0.25
             player(x,y)
         else:
             intro_run = False
@@ -97,7 +73,7 @@ def game_banner(x,y):
                     easy_btn = button(x+135,y+50,easy_img)
                     hard_img = pygame.image.load('space-invader\\hard-btn.png')
                     hard_btn = button(x+135,y+200,hard_img)
-                    screen.blit(mode_img,(x,y-50))
+                    screen.blit(mode_img,(x,y-45))
                     easy_btn.draw()
                     hard_btn.draw()
                     pygame.display.update()
@@ -135,19 +111,45 @@ mode = game_banner(190,170)
 player_y = intro2(player_x,player_y)
 play = True
 
-# Modes
-if mode == 'easy':
-    num_of_enemies = 5
-    change = 0.4
-elif mode == 'hard':
-    num_of_enemies = 10
-    change = 0.6
-
-for i in range(num_of_enemies):
+# Enemy
+num_of_enemies = 6
+change = 0.7
+enemy_x,enemy_y = [],[]
+enemy_x_change,enemy_y_change = [],[]
+for i in range(num_of_enemies):    
     enemy_x.append(random.randint(0,735))
     enemy_y.append(random.randint(10,200))
     enemy_x_change.append(change)
     enemy_y_change.append(45)
+
+def enemy(x,y,a):
+    enemy_img = pygame.image.load('space-invader\\enemy.png')
+    add_score = 1
+    change = 0.7
+    if mode == 'hard' and a % 2 == 0:
+        enemy_img = pygame.image.load('space-invader\\enemy-2.png')
+        add_score = 2
+        change = 0.9   
+    screen.blit(enemy_img,(x,y))
+    return [add_score,change]
+
+# Bullet
+bullet_img = pygame.image.load('space-invader\\bullet.png')
+bullet_x,bullet_y = player_x,520
+bullet_y_change = -0.8
+bullet_state = 'ready'
+def fire_bullet(x,y):
+    global bullet_state
+    bullet_state = 'fire'
+    screen.blit(bullet_img,(x+16,y+10))
+
+#Collision
+def iscollision(enemy_x,enemy_y,bullet_x,bullet_y):
+    distance = ((enemy_x-bullet_x)**2 + (enemy_y-bullet_y)**2)**0.5
+    if distance < 30:
+        return True
+    else:
+        return False
 
 # Score
 score_value = 0
@@ -188,9 +190,9 @@ while running:
                 play = True
                 pygame.display.update()
             elif event.key == pygame.K_LEFT:
-                player_x_change = -0.5
+                player_x_change = -0.8
             elif event.key == pygame.K_RIGHT:
-                player_x_change = 0.5
+                player_x_change = 0.8
             elif event.key == pygame.K_SPACE:
                 if bullet_state == 'ready':
                     bullet_sound = mixer.Sound('space-invader\\bullet.wav')
@@ -234,7 +236,8 @@ while running:
             enemy_x_change[j] = -change
             enemy_y[j] += enemy_y_change[j]
         enemy_x[j] += enemy_x_change[j]
-        enemy(enemy_x[j],enemy_y[j])
+
+        add_score,change = enemy(enemy_x[j],enemy_y[j],j)
 
         # Collision detection
         collision = iscollision(enemy_x[j],enemy_y[j],bullet_x,bullet_y)
@@ -243,7 +246,7 @@ while running:
             explosion_sound.play()
             bullet_y = 520
             bullet_state = 'ready'
-            score_value += 1
+            score_value += add_score
             enemy_x[j],enemy_y[j] = random.randint(0,735),random.randint(10,200)
 
     player(player_x,player_y)    
